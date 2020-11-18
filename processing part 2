@@ -1,0 +1,335 @@
+{
+  "intents": [
+    {
+      "intent": "météo",
+      "examples": [
+        {
+          "text": "comment est le temps demain ?"
+        },
+        {
+          "text": "il fait beau demain ?"
+        },
+        {
+          "text": "il faut froid demain ?"
+        },
+        {
+          "text": "il pleut demain ?"
+        },
+        {
+          "text": "je dois prendre mon parapluie demain ?"
+        }
+      ],
+      "description": "L'utilisateur veut savoir la météo de demain "
+    },
+    {
+      "intent": "musique",
+      "examples": [
+        {
+          "text": "est ce que je peux choisir la musique ?"
+        },
+        {
+          "text": "Est ce que je peux écouter de la musique ?"
+        },
+        {
+          "text": "est-ce que je peux mettre du son ?"
+        },
+        {
+          "text": "je peux écouter de la musique ?"
+        }
+      ],
+      "description": "L'utilisateur veut savoir s'il peut écouter de la musique gratuitement sur une plateforme"
+    }
+  ],
+  "entities": [
+    {
+      "entity": "musique-type",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "pop",
+          "synonyms": [
+            "musique commerciale",
+            "musique qui bouge"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "rock'n'roll",
+          "synonyms": [
+            "rock"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "techno",
+          "synonyms": [
+            "basses",
+            "house"
+          ]
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "temps",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "ensoleillé",
+          "synonyms": [
+            "beau",
+            "éclairci",
+            "lumineux"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "nuageux",
+          "synonyms": [
+            "couvert",
+            "humide",
+            "sombre"
+          ]
+        }
+      ],
+      "fuzzy_match": true
+    }
+  ],
+  "metadata": {
+    "api_version": {
+      "major_version": "v2",
+      "minor_version": "2018-11-08"
+    }
+  },
+  "dialog_nodes": [
+    {
+      "type": "standard",
+      "title": "Bienvenue",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Bonjour, comment puis-je vous aider ?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "welcome",
+      "dialog_node": "Bienvenue"
+    },
+    {
+      "type": "standard",
+      "title": "L'utilisateur veut savoir s'il peut écouter de la musique",
+      "metadata": {
+        "_customization": {
+          "mcr": true
+        }
+      },
+      "conditions": "#musique",
+      "dialog_node": "node_5_1605730653545",
+      "previous_sibling": "node_7_1605730413375"
+    },
+    {
+      "type": "standard",
+      "title": "L'utilisateur veut savoir la météo de demain",
+      "metadata": {
+        "_customization": {
+          "mcr": true
+        }
+      },
+      "conditions": "#météo",
+      "dialog_node": "node_7_1605730413375",
+      "previous_sibling": "Bienvenue"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "https://www.lachainemeteo.com/meteo-france/ville-33/previsions-meteo-paris-aujourdhui"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_7_1605730413375",
+      "conditions": "anything_else",
+      "dialog_node": "response_1_1605730587784",
+      "previous_sibling": "response_5_1605730544929"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Oui, voici une playlist techno :  "
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_5_1605730653545",
+      "conditions": "@musique-type:techno",
+      "dialog_node": "response_3_1605730715328",
+      "previous_sibling": "response_9_1605730678231"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Non, il ne fait pas beau demain. Prends ton parapluie."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_7_1605730413375",
+      "conditions": "@temps:nuageux",
+      "dialog_node": "response_5_1605730544929",
+      "previous_sibling": "response_6_1605730458902"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Oui, il faut beau demain."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_7_1605730413375",
+      "conditions": "@temps:ensoleillé",
+      "dialog_node": "response_6_1605730458902"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "https://www.deezer.com"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_5_1605730653545",
+      "conditions": "anything_else",
+      "dialog_node": "response_7_1605731150979",
+      "previous_sibling": "response_9_1605730759418"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Oui, il y a même du Taylor Swift si tu veux."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_5_1605730653545",
+      "conditions": "@musique-type:pop",
+      "dialog_node": "response_9_1605730678231"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Oui, il y a du rock, tu peux faire un pogo dans ta chambre sur ce son : "
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_5_1605730653545",
+      "conditions": "@musique-type:(rock'n'roll)",
+      "dialog_node": "response_9_1605730759418",
+      "previous_sibling": "response_3_1605730715328"
+    },
+    {
+      "type": "standard",
+      "title": "Tout le reste",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Je n'ai pas compris. Vous pouvez essayer de reformuler."
+              },
+              {
+                "text": "Pouvez-vous dire cela autrement ? Je ne comprends pas."
+              },
+              {
+                "text": "Je n'ai pas compris ce que vous voulez dire."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "anything_else",
+      "dialog_node": "Tout le reste",
+      "previous_sibling": "node_5_1605730653545",
+      "disambiguation_opt_out": true
+    }
+  ],
+  "counterexamples": [],
+  "system_settings": {
+    "disambiguation": {
+      "prompt": "Vouliez-vous dire:",
+      "enabled": true,
+      "randomize": true,
+      "max_suggestions": 5,
+      "suggestion_text_policy": "title",
+      "none_of_the_above_prompt": "Aucune de précédent"
+    },
+    "system_entities": {
+      "enabled": true
+    },
+    "human_agent_assist": {
+      "prompt": "Vouliez-vous dire:"
+    }
+  },
+  "learning_opt_out": false,
+  "name": "Processing 2",
+  "language": "fr",
+  "description": "chatbot processing 1"
+}
